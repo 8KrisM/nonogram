@@ -1,0 +1,7 @@
+Generovanie:
+	Herné pole bude náhodne vybrané z databázy - hráč si môže vybrať z vopred určených veľkostí a či chce krížovku farebnú alebo čiernobielu.
+Overovanie stavov hry:
+	Ak hráč si myslí, že správne vylúštil krížovku, tlačídlom spustí overenie.
+	Ak hrač správne vylúštil krížovku, hra je označena za vyhratú, v opačnom prípade za prehratú. V oboch prípadoch hra končí.
+Ťah hráča:
+	Na začiatku sú všetky políčka prázdne. Počas hry môže hráč ľubovoľne označovať akékoľvek políčko ako vyplnené alebo prázdne. 
