@@ -1,11 +1,12 @@
 package sk.tuke.kpi.kp.nonogram.core;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class GameField {
 
-    private enum State{
+    public enum State{
         PLAYING, SOLVED, FAILED
     }
 
@@ -20,59 +21,140 @@ public class GameField {
     private int rows;
     private Type type;
     private State state;
-    private int timer;
+    private LocalTime timeAtStart;
 
     public GameField(int rows, int columns, Type type){
         this.rows=rows;
         this.columns=columns;
+        this.tiles= new Tile[rows][columns];
+        for(int i=0; i<rows; i++){
+            for(int j=0; j<columns; j++){
+                tiles[i][j]=new Tile();
+            }
+        }
+        this.guessedTiles= new Tile[rows][columns];
+        for(int i=0; i<rows; i++){
+            for(int j=0; j<columns; j++){
+                guessedTiles[i][j]=new Tile();
+            }
+        }
         this.type=type;
         state=State.PLAYING;
-        tiles = getRandomNonogram();
+        getRandomNonogram();
+        timeAtStart=LocalTime.now();
     }
 
-    public void setRows(int rows) {
-        this.rows = rows;
+    public ArrayList<Color> getColors() {
+        return colors;
     }
 
-    public void setColumns(int columns) {
-        this.columns = columns;
+    public Tile[][] getTiles() {
+        return tiles;
     }
 
-    public void setTimer(int timer) {
-        this.timer = timer;
+    public Tile[][] getGuessedTiles() {
+        return guessedTiles;
     }
 
-    public Tile getTile(int row, int column) {
-        return this.tiles[row][column];
+    public Type getType() {
+        return type;
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public LocalTime getTimeAtStart() {
+        return timeAtStart;
+    }
+    public Tile getGuessedTile(int row, int column){ return guessedTiles[row][column];}
+    public Tile getTile(int row, int column){ return tiles[row][column];}
+
+    public int getRows() {
+        return rows;
     }
 
     public int getColumns() {
         return columns;
     }
 
-    public int getRows() {
-        return rows;
+    public void setColors(ArrayList<Color> colors) {
+        this.colors = colors;
     }
 
-    public int getTimer() {
-        return timer;
+    public void setTiles(Tile[][] tiles) {
+        this.tiles = tiles;
     }
 
-    private Tile[][] getRandomNonogram() {
-        return new Tile[0][];
+    public void setGuessedTiles(Tile[][] guessedTiles) {
+        this.guessedTiles = guessedTiles;
+    }
+
+    public void setColumns(int columns) {
+        this.columns = columns;
+    }
+
+    public void setRows(int rows) {
+        this.rows = rows;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    public void setTimeAtStart(LocalTime timeAtStart) {
+        this.timeAtStart = timeAtStart;
+    }
+
+
+    private void getRandomNonogram(){
+        type=Type.BLACKANDWHITE;
+        for(int i=0; i<5; i++){
+            for(int j=0; j<5; j++){
+                tiles[i][j].setState(Tile.State.BLANK);
+            }
+        }
+        tiles[1][2].setState(Tile.State.FILLED);
+        tiles[1][3].setState(Tile.State.FILLED);
+        tiles[1][4].setState(Tile.State.FILLED);
+        tiles[2][2].setState(Tile.State.FILLED);
+        tiles[2][3].setState(Tile.State.FILLED);
+        tiles[3][2].setState(Tile.State.FILLED);
+        tiles[3][4].setState(Tile.State.FILLED);
     }
 
     public Boolean isSolved(){
-        return Arrays.deepEquals(tiles, guessedTiles);
+        for(int i=0; i<rows; i++){
+            for(int j=0; j<columns; j++){
+                if(tiles[i][j].getState()!=guessedTiles[i][j].getState()) {
+                    state=State.FAILED;
+                    return false;
+                }
+            }
+        }
+        state=State.SOLVED;
+        return true;
     }
 
     public void markBlankTile(int row, int column){
         guessedTiles[row][column].setState(Tile.State.BLANK);
     }
-    public void fillTile(int row, int column, Color color){
+    public void fillTile(int row, int column){
         guessedTiles[row][column].setState(Tile.State.FILLED);
     }
     public void helpRandom(){
-
+        int randomRow;
+        int randomColumn;
+        do {
+            randomRow = (int) (Math.random() * rows);
+            randomColumn = (int) (Math.random() * columns);
+        }
+        while(guessedTiles[randomRow][randomColumn].getState() != Tile.State.UNMARKED);
+        guessedTiles[randomRow][randomColumn].setState(tiles[randomRow][randomColumn].getState());
     }
+
 }
