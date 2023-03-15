@@ -1,28 +1,46 @@
 package sk.tuke.kpi.kp.nonogram.consoleui;
 
+import sk.tuke.gamestudio.entity.Comment;
+import sk.tuke.gamestudio.entity.Rating;
+import sk.tuke.gamestudio.entity.Score;
+import sk.tuke.gamestudio.service.CommentServiceJDBC;
+import sk.tuke.gamestudio.service.RatingServiceJDBC;
+import sk.tuke.gamestudio.service.ScoreServiceJDBC;
 import sk.tuke.kpi.kp.nonogram.core.GameField;
 import sk.tuke.kpi.kp.nonogram.core.Tile;
 
+import java.util.Date;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ConsoleUI {
     private GameField gameField;
+    private ScoreServiceJDBC scoreServiceJDBC = new ScoreServiceJDBC();
+    private RatingServiceJDBC ratingServiceJDBC = new RatingServiceJDBC();
+    private String name;
     public void play(GameField gameField) {
         this.gameField = gameField;
+
+        System.out.print("Enter your name: ");
+        Scanner nameScanner= new Scanner(System.in);
+        name=nameScanner.nextLine();
+        System.out.println("Hi "+name+"! Let's play.");
+
         do {
             show();
             handleInput();
         } while(gameField.getState() == GameField.State.PLAYING);
 
         show();
-
         if(gameField.getState() == GameField.State.SOLVED) {
             System.out.println("Solved successfully! Congratulations.");
         } else if(gameField.getState() == GameField.State.FAILED){
             System.out.println("Oh no! Failed!");
         }
+        scoreServiceJDBC.addScore(new Score("Nonogram", name, 5, new Date(System.currentTimeMillis())));
+        handleComment();
+        handleRating();
     }
 
     public void show(){
@@ -63,7 +81,7 @@ public class ConsoleUI {
         Pattern patternField=Pattern.compile("(F|B)([A-"+(char)(gameField.getColumns()+97)+"])([1-"+gameField.getRows()+"])");
 
         String input;
-        Scanner scanner = new Scanner(System.in);  // Create a Scanner object
+        Scanner scanner = new Scanner(System.in);
 
         Matcher matcherCheck;
         Matcher matcherField;
@@ -86,6 +104,49 @@ public class ConsoleUI {
             if(input.charAt(0)=='B'){
                 gameField.markBlankTile(input.charAt(2)-49,input.charAt(1)-65);
             }
+        }
+    }
+
+    public void handleComment(){
+        CommentServiceJDBC commentServiceJDBC = new CommentServiceJDBC();
+        Pattern patternInput=Pattern.compile("(y|Y)|(n|N)");
+        Scanner scanner = new Scanner(System.in);
+        String input;
+        Matcher matcher;
+        do{
+            System.out.print("Do you want to add comment? (y/n): ");
+            input = scanner.nextLine();
+            matcher= patternInput.matcher(input);
+        }
+        while(!matcher.matches());
+        if(input.equals("y") || input.equals("Y")){
+            System.out.print("Write comment: ");
+            input=scanner.nextLine();
+            commentServiceJDBC.addComment(new Comment("Nonogram",name,input,new Date(System.currentTimeMillis())));
+        }
+    }
+
+    public void handleRating(){
+        RatingServiceJDBC commentServiceJDBC = new RatingServiceJDBC();
+        Pattern patternInput=Pattern.compile("(y|Y)|(n|N)");
+        Pattern patternRating= Pattern.compile("[1-5]");
+        Scanner scanner = new Scanner(System.in);
+        String input;
+        Matcher matcher;
+        do{
+            System.out.print("Do you want to add rating? (y/n): ");
+            input = scanner.nextLine();
+            matcher= patternInput.matcher(input);
+        }
+        while(!matcher.matches());
+        if(input.equals("y") || input.equals("Y")){
+            do {
+                System.out.print("Add rating: (1-5)");
+                input = scanner.nextLine();
+                matcher= patternRating.matcher(input);
+            }
+            while(!matcher.matches());
+            ratingServiceJDBC.setRating(new Rating("Nonogram",name,Integer.parseInt(input),new Date(System.currentTimeMillis())));
         }
     }
 }
