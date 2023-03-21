@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 import sk.tuke.kpi.kp.nonogram.core.GameField;
 import sk.tuke.kpi.kp.nonogram.core.Tile;
 
+import java.io.IOException;
+
 public class GameFieldTest {
     private int columns, rows;
     private GameField.Type type;
@@ -25,16 +27,9 @@ public class GameFieldTest {
     public void isSolvedCorrect(){
         for(int i=0; i<5; i++){
             for(int j=0; j<5; j++){
-                gamefield.markBlankTile(i,j);
+                gamefield.getGuessedTile(i,j).setState(gamefield.getTile(i,j).getState());
             }
         }
-        gamefield.fillTile(1,2);
-        gamefield.fillTile(1,3);
-        gamefield.fillTile(1,4);
-        gamefield.fillTile(2,2);
-        gamefield.fillTile(2,3);
-        gamefield.fillTile(3,2);
-        gamefield.fillTile(3,4);
         Assertions.assertEquals(true, gamefield.isSolved());
     }
 
@@ -50,4 +45,25 @@ public class GameFieldTest {
         }
         Assertions.assertEquals(unchanged, tilesCount);
     }
+
+    @Test
+    public void runningRandomHelpGamefieldSizeTimesShouldSolveNonogram(){
+        for(int i=0; i<rows*columns;i++)gamefield.helpRandom();
+        Assertions.assertEquals(true,gamefield.isSolved());
+    }
+
+    @Test
+    public void getRandomNonogramShouldBeRandom() throws IOException {
+        Tile[][] randomNonogram0=gamefield.getRandomNonogram();
+        Tile[][] randomNonogram1=gamefield.getRandomNonogram();
+        for(int i=0; i<rows; i++){
+            for(int j=0; j<columns; j++){
+                if(randomNonogram0[i][j].getState()!=randomNonogram1[i][j].getState())return;
+                else randomNonogram1= gamefield.getRandomNonogram();
+            }
+        }
+    }
+
+
+
 }

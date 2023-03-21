@@ -44,7 +44,8 @@ public class RatingServiceJDBC implements RatingService {
                     averageRating=rs.getInt(3);
                     entries++;
                 }
-                return averageRating/entries;
+                if(entries!=0)return averageRating/entries;
+                else return 0;
             }
         } catch (SQLException e) {
             throw new ScoreException("Problem selecting average rating", e);
