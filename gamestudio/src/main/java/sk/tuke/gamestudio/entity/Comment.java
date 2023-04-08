@@ -1,9 +1,16 @@
 package sk.tuke.gamestudio.entity;
 
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.util.Date;
 
+@Entity
 public class Comment {
+    @Id
+    @GeneratedValue
+    private int ident;
     private String game;
 
     private String player;
@@ -12,11 +19,21 @@ public class Comment {
 
     private Date commentedOn;
 
+    public Comment(){}
+
     public Comment(String game, String player, String comment, Date commentedOn) {
         this.game = game;
         this.player = player;
         this.comment = comment;
         this.commentedOn = commentedOn;
+    }
+
+    public int getIdent() {
+        return ident;
+    }
+
+    public void setIdent(int ident) {
+        this.ident = ident;
     }
 
     public String getGame() {

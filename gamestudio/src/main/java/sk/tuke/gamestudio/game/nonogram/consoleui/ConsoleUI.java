@@ -1,13 +1,12 @@
-package sk.tuke.kpi.kp.nonogram.consoleui;
+package sk.tuke.gamestudio.game.nonogram.consoleui;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import sk.tuke.gamestudio.entity.Comment;
 import sk.tuke.gamestudio.entity.Rating;
 import sk.tuke.gamestudio.entity.Score;
-import sk.tuke.gamestudio.service.CommentServiceJDBC;
-import sk.tuke.gamestudio.service.RatingServiceJDBC;
-import sk.tuke.gamestudio.service.ScoreServiceJDBC;
-import sk.tuke.kpi.kp.nonogram.core.GameField;
-import sk.tuke.kpi.kp.nonogram.core.Tile;
+import sk.tuke.gamestudio.service.*;
+import sk.tuke.gamestudio.game.nonogram.core.GameField;
+import sk.tuke.gamestudio.game.nonogram.core.Tile;
 
 import java.util.Date;
 import java.util.List;
@@ -17,13 +16,26 @@ import java.util.regex.Pattern;
 
 public class ConsoleUI {
     private GameField gameField;
-    private ScoreServiceJDBC scoreServiceJDBC = new ScoreServiceJDBC();
-    private RatingServiceJDBC ratingServiceJDBC = new RatingServiceJDBC();
+
+    @Autowired
+    private ScoreServiceJPA scoreService;
+    @Autowired
+    private RatingServiceJPA ratingService;
+    @Autowired
+    private CommentServiceJPA commentService;
+
+    /*private ScoreServiceJDBC scoreService = new ScoreServiceJDBC();
+    /private RatingServiceJDBC ratingService = new RatingServiceJDBC();
+    private CommentServiceJDBC commentService = new CommentServiceJDBC();*/
     private String name;
 
-    public void play(GameField gameField) {
-        this.gameField = gameField;
+    public ConsoleUI(){}
 
+    public ConsoleUI(GameField gameField){
+        this.gameField=gameField;
+    }
+
+    public void play() {
         System.out.print("Welcome! Your task is to solve a nonogram. You have 3 chances to check, each check takes down one point from your score.\nEach use of help takes down one point from your score.\nEnter your name: ");
         Scanner nameScanner = new Scanner(System.in);
         name = nameScanner.nextLine();
@@ -42,7 +54,7 @@ public class ConsoleUI {
             showCorrectGamefield();
         }
         System.out.println("Your score is: "+gameField.getScore()+"\nAverage score is: "+ averageScore());
-        scoreServiceJDBC.addScore(new Score("Nonogram", name, gameField.getScore(), new Date(System.currentTimeMillis())));
+        scoreService.addScore(new Score("Nonogram", name, gameField.getScore(), new Date(System.currentTimeMillis())));
         handleComment();
         handleRating();
     }
@@ -168,7 +180,6 @@ public class ConsoleUI {
     }
 
     public void handleComment() {
-        CommentServiceJDBC commentServiceJDBC = new CommentServiceJDBC();
         Pattern patternInput = Pattern.compile("(y|Y)|(n|N)");
         Scanner scanner = new Scanner(System.in);
         String input;
@@ -182,7 +193,7 @@ public class ConsoleUI {
         if (input.equals("y") || input.equals("Y")) {
             System.out.print("Write comment: ");
             input = scanner.nextLine();
-            commentServiceJDBC.addComment(new Comment("Nonogram", name, input, new Date(System.currentTimeMillis())));
+            commentService.addComment(new Comment("Nonogram", name, input, new Date(System.currentTimeMillis())));
         }
         do {
             System.out.print("Do you want to see other comments? (y/n): ");
@@ -191,7 +202,7 @@ public class ConsoleUI {
         }
         while (!matcher.matches());
         if (input.equals("y") || input.equals("Y")) {
-            List<Comment> comments=commentServiceJDBC.getComments("Nonogram");
+            List<Comment> comments= commentService.getComments("Nonogram");
             for(Comment temp: comments){
                 System.out.println("Player: "+temp.getPlayer()+" says: "+ temp.getComment());
             }
@@ -199,7 +210,6 @@ public class ConsoleUI {
     }
 
     public void handleRating() {
-        RatingServiceJDBC commentServiceJDBC = new RatingServiceJDBC();
         Pattern patternInput = Pattern.compile("(y|Y)|(n|N)");
         Pattern patternRating = Pattern.compile("[1-5]");
         Scanner scanner = new Scanner(System.in);
@@ -218,7 +228,7 @@ public class ConsoleUI {
                 matcher = patternRating.matcher(input);
             }
             while (!matcher.matches());
-            ratingServiceJDBC.setRating(new Rating("Nonogram", name, Integer.parseInt(input), new Date(System.currentTimeMillis())));
+            ratingService.setRating(new Rating("Nonogram", name, Integer.parseInt(input), new Date(System.currentTimeMillis())));
         }
     }
 
@@ -240,8 +250,7 @@ public class ConsoleUI {
     }
 
     public int averageScore(){
-        ScoreServiceJDBC scoreServiceJDBC = new ScoreServiceJDBC();
-        List<Score> scores= scoreServiceJDBC.getTopScores("Nonogram");
+        List<Score> scores= scoreService.getTopScores("Nonogram");
         int sum=0;
         for(Score temp: scores){
             sum+=temp.getPoints();

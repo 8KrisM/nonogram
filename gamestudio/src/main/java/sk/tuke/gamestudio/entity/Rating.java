@@ -1,9 +1,16 @@
 package sk.tuke.gamestudio.entity;
 
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.util.Date;
 
+@Entity
 public class Rating {
+    @Id
+    @GeneratedValue
+    private int ident;
     private String game;
 
     private String player;
@@ -12,6 +19,8 @@ public class Rating {
 
     private Date ratedOn;
 
+    public Rating(){}
+
     public Rating(String game, String player, int rating, Date ratedOn) {
         this.game = game;
         this.player = player;
@@ -19,6 +28,13 @@ public class Rating {
         this.ratedOn = ratedOn;
     }
 
+    public int getIdent() {
+        return ident;
+    }
+
+    public void setIdent(int ident) {
+        this.ident = ident;
+    }
     public String getGame() {
         return game;
     }

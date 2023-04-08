@@ -1,13 +1,13 @@
-package sk.tuke.kpi.kp.nonogram;
+package sk.tuke.gamestudio.game.nonogram;
 
-import sk.tuke.kpi.kp.nonogram.consoleui.ConsoleUI;
-import sk.tuke.kpi.kp.nonogram.core.GameField;
+import sk.tuke.gamestudio.game.nonogram.consoleui.ConsoleUI;
+import sk.tuke.gamestudio.game.nonogram.core.GameField;
 
 public class Main {
     public static void main(String[] args) {
         ConsoleUI ui = new ConsoleUI();
         int size = ui.selectSize();
         GameField gamefield = new GameField(size, size, GameField.Type.BLACKANDWHITE);
-        ui.play(gamefield);
+        new ConsoleUI(gamefield).play();
     }
 }

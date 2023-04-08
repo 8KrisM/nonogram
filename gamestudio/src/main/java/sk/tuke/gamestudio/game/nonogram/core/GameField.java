@@ -1,4 +1,4 @@
-package sk.tuke.kpi.kp.nonogram.core;
+package sk.tuke.gamestudio.game.nonogram.core;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 
 public class GameField {

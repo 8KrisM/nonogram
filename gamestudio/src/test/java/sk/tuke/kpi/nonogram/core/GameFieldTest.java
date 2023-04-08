@@ -1,8 +1,8 @@
 package sk.tuke.kpi.nonogram.core;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import sk.tuke.kpi.kp.nonogram.core.GameField;
-import sk.tuke.kpi.kp.nonogram.core.Tile;
+import sk.tuke.gamestudio.game.nonogram.core.GameField;
+import sk.tuke.gamestudio.game.nonogram.core.Tile;
 
 import java.io.IOException;
 

@@ -1,4 +1,4 @@
-package sk.tuke.kpi.kp.nonogram.core;
+package sk.tuke.gamestudio.game.nonogram.core;
 
 public class Color {
     private int red, green, blue;
