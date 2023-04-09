@@ -1,17 +1,18 @@
 package sk.tuke.gamestudio.game.nonogram.core;
 
 public class Tile {
-    public enum State{
+    public enum State {
         UNMARKED, BLANK, FILLED
     }
+
     private State state;
 
-    public Tile(){
-        state=State.UNMARKED;
+    public Tile() {
+        state = State.UNMARKED;
     }
 
-    public Tile(State state){
-        this.state=state;
+    public Tile(State state) {
+        this.state = state;
     }
 
     public State getState() {
@@ -24,8 +25,8 @@ public class Tile {
 
     @Override
     public String toString() {
-        if(state==State.FILLED)return "■";
-        else if(state==State.BLANK)return ".";
+        if (state == State.FILLED) return "■";
+        else if (state == State.BLANK) return ".";
         else return " ";
     }
 }

@@ -7,7 +7,7 @@ import java.util.Date;
 
 
 @Entity
-public class Score{
+public class Score {
 
     @Id
     @GeneratedValue
@@ -20,7 +20,8 @@ public class Score{
 
     private Date playedOn;
 
-    public Score(){}
+    public Score() {
+    }
 
     public Score(String game, String player, int points, Date playedOn) {
         this.game = game;

@@ -1,13 +1,12 @@
 package sk.tuke.gamestudio.service;
 
 import sk.tuke.gamestudio.entity.Comment;
-import sk.tuke.gamestudio.entity.Score;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommentServiceJDBC implements CommentService{
+public class CommentServiceJDBC implements CommentService {
 
     public static final String URL = "jdbc:postgresql://localhost/gamestudio";
     public static final String USER = "postgres";

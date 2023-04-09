@@ -1,11 +1,8 @@
 package sk.tuke.gamestudio.service;
 
 import sk.tuke.gamestudio.entity.Rating;
-import sk.tuke.gamestudio.entity.Score;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class RatingServiceJDBC implements RatingService {
     public static final String URL = "jdbc:postgresql://localhost/gamestudio";
@@ -39,12 +36,12 @@ public class RatingServiceJDBC implements RatingService {
             statement.setString(1, game);
             try (ResultSet rs = statement.executeQuery()) {
                 int averageRating = 0;
-                int entries=0;
+                int entries = 0;
                 while (rs.next()) {
-                    averageRating=rs.getInt(3);
+                    averageRating = rs.getInt(3);
                     entries++;
                 }
-                if(entries!=0)return averageRating/entries;
+                if (entries != 0) return averageRating / entries;
                 else return 0;
             }
         } catch (SQLException e) {
@@ -58,11 +55,11 @@ public class RatingServiceJDBC implements RatingService {
              PreparedStatement statement = connection.prepareStatement(SELECTRATING);
         ) {
             statement.setString(1, game);
-            statement.setString(2,player);
+            statement.setString(2, player);
             try (ResultSet rs = statement.executeQuery()) {
-                int rating=0;
+                int rating = 0;
                 while (rs.next()) {
-                    rating=rs.getInt(3);
+                    rating = rs.getInt(3);
                 }
                 return rating;
             }

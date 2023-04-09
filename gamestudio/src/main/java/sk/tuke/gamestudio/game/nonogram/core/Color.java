@@ -3,10 +3,10 @@ package sk.tuke.gamestudio.game.nonogram.core;
 public class Color {
     private int red, green, blue;
 
-    public Color(int r, int g, int b){
-        red=r;
-        green=g;
-        blue=b;
+    public Color(int r, int g, int b) {
+        red = r;
+        green = g;
+        blue = b;
     }
 
     public int getBlue() {

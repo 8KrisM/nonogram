@@ -14,20 +14,36 @@ public class ScoreServiceJPA implements ScoreService {
 
     @Override
     public void addScore(Score score) {
-        entityManager.persist(score);
+        try{
+            entityManager.persist(score);
+        }
+        catch(Exception e){
+            throw new ScoreException("Error adding score",e);
+        }
     }
 
     @Override
     public List<Score> getTopScores(String game) {
-        return entityManager.createQuery("select s from Score s where s.game = :game order by s.points desc", Score.class)
-                .setParameter("game", game)
-                .setMaxResults(10)
-                .getResultList();
+        try{
+            return entityManager.createQuery("select s from Score s where s.game = :game order by s.points desc", Score.class)
+                    .setParameter("game", game)
+                    .setMaxResults(10)
+                    .getResultList();
+        }
+        catch(Exception e){
+            throw new ScoreException("Error getting scores",e);
+        }
+
     }
 
 
     @Override
     public void reset() {
-        entityManager.createNativeQuery("DELETE FROM score").executeUpdate();
+        try{
+            entityManager.createNativeQuery("DELETE FROM score").executeUpdate();
+        }
+        catch(Exception e){
+            throw new ScoreException("Error resetting score",e);
+        }
     }
 }

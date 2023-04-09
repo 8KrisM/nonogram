@@ -19,7 +19,8 @@ public class Rating {
 
     private Date ratedOn;
 
-    public Rating(){}
+    public Rating() {
+    }
 
     public Rating(String game, String player, int rating, Date ratedOn) {
         this.game = game;
@@ -35,6 +36,7 @@ public class Rating {
     public void setIdent(int ident) {
         this.ident = ident;
     }
+
     public String getGame() {
         return game;
     }

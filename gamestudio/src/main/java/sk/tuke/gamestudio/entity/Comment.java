@@ -19,7 +19,8 @@ public class Comment {
 
     private Date commentedOn;
 
-    public Comment(){}
+    public Comment() {
+    }
 
     public Comment(String game, String player, String comment, Date commentedOn) {
         this.game = game;

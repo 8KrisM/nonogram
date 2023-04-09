@@ -10,17 +10,17 @@ import java.util.Random;
 
 public class GameField {
 
-    public class TilesFactory{
-        public Tile[][] createEmptyTiles(String type){
+    public class TilesFactory {
+        public Tile[][] createEmptyTiles(String type) {
             Tile[][] emptyTiles = new Tile[rows][columns];
-            if(type=="guessed")for(int i=0; i<rows; i++){
-                for(int j=0; j<columns; j++){
+            if (type == "guessed") for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < columns; j++) {
                     emptyTiles[i][j] = new Tile();
                 }
             }
-            else{
-                for(int i=0; i<rows; i++){
-                    for(int j=0; j<columns; j++){
+            else {
+                for (int i = 0; i < rows; i++) {
+                    for (int j = 0; j < columns; j++) {
                         emptyTiles[i][j] = new Tile();
                         emptyTiles[i][j].setState(Tile.State.BLANK);
                     }
@@ -29,6 +29,7 @@ public class GameField {
             return emptyTiles;
         }
     }
+
     public enum State {
         PLAYING, SOLVED, FAILED
     }
@@ -49,8 +50,8 @@ public class GameField {
     private int helpUses;
 
     public GameField(int rows, int columns, Type type) {
-        this.chances=3;
-        this.helpUses=0;
+        this.chances = 3;
+        this.helpUses = 0;
         this.rows = rows;
         this.columns = columns;
         TilesFactory factory = new TilesFactory();
@@ -60,7 +61,7 @@ public class GameField {
         this.type = type;
         state = State.PLAYING;
         try {
-            tiles=getRandomNonogram();
+            tiles = getRandomNonogram();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -107,7 +108,9 @@ public class GameField {
         return columns;
     }
 
-    public int getChances() { return chances; }
+    public int getChances() {
+        return chances;
+    }
 
     public void setColors(ArrayList<Color> colors) {
         this.colors = colors;
@@ -141,11 +144,13 @@ public class GameField {
         this.timeAtStart = timeAtStart;
     }
 
-    public void setChances(int chances) { this.chances = chances; }
+    public void setChances(int chances) {
+        this.chances = chances;
+    }
 
     public Tile[][] getRandomNonogram() throws IOException {
-        TilesFactory factory= new TilesFactory();
-        Tile[][] randomNonogram= factory.createEmptyTiles("tiles");
+        TilesFactory factory = new TilesFactory();
+        Tile[][] randomNonogram = factory.createEmptyTiles("tiles");
         InputStream inputStream = GameField.class.getResourceAsStream("/" + rows + "x" + columns);
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         int lines = 0;
@@ -175,7 +180,7 @@ public class GameField {
             for (int j = 0; j < columns; j++) {
                 if (tiles[i][j].getState() != guessedTiles[i][j].getState()) {
                     chances--;
-                    if(chances<1) {
+                    if (chances < 1) {
                         state = State.FAILED;
                     }
                     return false;
@@ -187,11 +192,13 @@ public class GameField {
     }
 
     public void markBlankTile(int row, int column) {
-        if((row<rows&&row>=0)&&(column<columns&&column>=0))guessedTiles[row][column].setState(Tile.State.BLANK);
+        if ((row < rows && row >= 0) && (column < columns && column >= 0))
+            guessedTiles[row][column].setState(Tile.State.BLANK);
     }
 
     public void fillTile(int row, int column) {
-        if((row<rows&&row>=0)&&(column<columns&&column>=0))guessedTiles[row][column].setState(Tile.State.FILLED);
+        if ((row < rows && row >= 0) && (column < columns && column >= 0))
+            guessedTiles[row][column].setState(Tile.State.FILLED);
     }
 
     public void helpRandom() {
@@ -205,25 +212,26 @@ public class GameField {
         helpUses++;
         guessedTiles[randomRow][randomColumn].setState(tiles[randomRow][randomColumn].getState());
     }
-    public boolean areThereIncorrectlySolved(){
+
+    public boolean areThereIncorrectlySolved() {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
-                if(guessedTiles[i][j].getState() != tiles[i][j].getState()) return true;
+                if (guessedTiles[i][j].getState() != tiles[i][j].getState()) return true;
             }
         }
         return false;
     }
 
-    public int getScore(){
-        int score=10-(3-chances)-(helpUses);
-        if(score<0||state==State.FAILED) return 0;
+    public int getScore() {
+        int score = 10 - (3 - chances) - (helpUses);
+        if (score < 0 || state == State.FAILED) return 0;
         else return score;
     }
 
-    public void fillUnmarkedAsBlank(){
+    public void fillUnmarkedAsBlank() {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
-                if(guessedTiles[i][j].getState()== Tile.State.UNMARKED) guessedTiles[i][j].setState(Tile.State.BLANK);
+                if (guessedTiles[i][j].getState() == Tile.State.UNMARKED) guessedTiles[i][j].setState(Tile.State.BLANK);
             }
         }
     }

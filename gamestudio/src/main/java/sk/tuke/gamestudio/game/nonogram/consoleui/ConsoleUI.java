@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import sk.tuke.gamestudio.entity.Comment;
 import sk.tuke.gamestudio.entity.Rating;
 import sk.tuke.gamestudio.entity.Score;
-import sk.tuke.gamestudio.service.*;
 import sk.tuke.gamestudio.game.nonogram.core.GameField;
 import sk.tuke.gamestudio.game.nonogram.core.Tile;
+import sk.tuke.gamestudio.service.*;
 
 import java.util.Date;
 import java.util.List;
@@ -18,28 +18,36 @@ public class ConsoleUI {
     private GameField gameField;
 
     @Autowired
+    private ScoreService scoreService;
+    @Autowired
+    private RatingService ratingService;
+    @Autowired
+    private CommentService commentService;
+
+    /*@Autowired
     private ScoreServiceJPA scoreService;
     @Autowired
     private RatingServiceJPA ratingService;
     @Autowired
-    private CommentServiceJPA commentService;
+    private CommentServiceJPA commentService;*/
 
     /*private ScoreServiceJDBC scoreService = new ScoreServiceJDBC();
     /private RatingServiceJDBC ratingService = new RatingServiceJDBC();
     private CommentServiceJDBC commentService = new CommentServiceJDBC();*/
     private String name;
 
-    public ConsoleUI(){}
+    public ConsoleUI() {
+    }
 
-    public ConsoleUI(GameField gameField){
-        this.gameField=gameField;
+    public ConsoleUI(GameField gameField) {
+        this.gameField = gameField;
     }
 
     public void play() {
         System.out.print("Welcome! Your task is to solve a nonogram. You have 3 chances to check, each check takes down one point from your score.\nEach use of help takes down one point from your score.\nEnter your name: ");
         Scanner nameScanner = new Scanner(System.in);
         name = nameScanner.nextLine();
-        System.out.println(name +" it is! Let's play.");
+        System.out.println(name + " it is! Let's play.");
 
         do {
             show();
@@ -53,8 +61,7 @@ public class ConsoleUI {
             System.out.println("Oh no! Failed!");
             showCorrectGamefield();
         }
-        System.out.println("Your score is: "+gameField.getScore()+"\nAverage score is: "+ averageScore());
-        scoreService.addScore(new Score("Nonogram", name, gameField.getScore(), new Date(System.currentTimeMillis())));
+        handleScore();
         handleComment();
         handleRating();
     }
@@ -112,7 +119,7 @@ public class ConsoleUI {
             clueRow = 0;
         }
         System.out.print("  ");
-        int zeroRow=0;
+        int zeroRow = 0;
         for (int i = 0; i < columnClue[0].length; i++) {
             for (int j = 0; j < columnClue.length; j++) {
                 if (columnClue[j][i] != 0) System.out.print(" " + columnClue[j][i]);
@@ -122,13 +129,13 @@ public class ConsoleUI {
                 }
             }
             System.out.println();
-            if(zeroRow==columnClue.length) break;
-            else zeroRow=0;
+            if (zeroRow == columnClue.length) break;
+            else zeroRow = 0;
             System.out.print("  ");
         }
     }
 
-    public void showCorrectGamefield(){
+    public void showCorrectGamefield() {
         System.out.print("\nCorrect nonogram:\n ");
         for (int i = 1; i <= gameField.getColumns(); i++) {
             System.out.print("--");
@@ -150,7 +157,7 @@ public class ConsoleUI {
 
     public void handleInput() {
         Pattern patternCheck = Pattern.compile("C|H|X");
-        Pattern patternField = Pattern.compile("(F|B)([A-" + (char) (gameField.getColumns()-1 + 65) + "])([1-" + gameField.getRows() + "])");
+        Pattern patternField = Pattern.compile("(F|B)([A-" + (char) (gameField.getColumns() - 1 + 65) + "])([1-" + gameField.getRows() + "])");
 
         String input;
         Scanner scanner = new Scanner(System.in);
@@ -166,9 +173,9 @@ public class ConsoleUI {
         }
         while (!matcherCheck.matches() && !matcherField.matches());
         if (input.equals("H")) gameField.helpRandom();
-        if(input.equals("X")) gameField.fillUnmarkedAsBlank();
+        if (input.equals("X")) gameField.fillUnmarkedAsBlank();
         if (input.equals("C")) {
-            if(!gameField.isSolved()) System.out.println("Incorrect. Left chances: " + gameField.getChances());
+            if (!gameField.isSolved()) System.out.println("Incorrect. Left chances: " + gameField.getChances());
         } else {
             if (input.charAt(0) == 'F') {
                 gameField.fillTile(input.charAt(2) - 49, input.charAt(1) - 65);
@@ -176,6 +183,17 @@ public class ConsoleUI {
             if (input.charAt(0) == 'B') {
                 gameField.markBlankTile(input.charAt(2) - 49, input.charAt(1) - 65);
             }
+        }
+    }
+
+    public void handleScore(){
+        System.out.println("Your score is: " + gameField.getScore());
+        try{
+            System.out.println("Average score is: "+ ratingService.getAverageRating("Nonogram"));
+            scoreService.addScore(new Score("Nonogram", name, gameField.getScore(), new Date(System.currentTimeMillis())));
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
         }
     }
 
@@ -193,7 +211,12 @@ public class ConsoleUI {
         if (input.equals("y") || input.equals("Y")) {
             System.out.print("Write comment: ");
             input = scanner.nextLine();
-            commentService.addComment(new Comment("Nonogram", name, input, new Date(System.currentTimeMillis())));
+            try{
+                commentService.addComment(new Comment("Nonogram", name, input, new Date(System.currentTimeMillis())));
+            }
+            catch (Exception e){
+                System.out.println(e.getMessage());
+            }
         }
         do {
             System.out.print("Do you want to see other comments? (y/n): ");
@@ -202,9 +225,14 @@ public class ConsoleUI {
         }
         while (!matcher.matches());
         if (input.equals("y") || input.equals("Y")) {
-            List<Comment> comments= commentService.getComments("Nonogram");
-            for(Comment temp: comments){
-                System.out.println("Player: "+temp.getPlayer()+" says: "+ temp.getComment());
+            try {
+                List<Comment> comments = commentService.getComments("Nonogram");
+                for (Comment temp : comments) {
+                    System.out.println("Player: " + temp.getPlayer() + " says: " + temp.getComment());
+                }
+            }
+            catch (Exception e){
+                System.out.println(e.getMessage());
             }
         }
     }
@@ -223,12 +251,17 @@ public class ConsoleUI {
         while (!matcher.matches());
         if (input.equals("y") || input.equals("Y")) {
             do {
-                System.out.print("Add rating: (1-5)");
+                System.out.print("Add rating(1-5): ");
                 input = scanner.nextLine();
                 matcher = patternRating.matcher(input);
             }
             while (!matcher.matches());
-            ratingService.setRating(new Rating("Nonogram", name, Integer.parseInt(input), new Date(System.currentTimeMillis())));
+            try{
+                ratingService.setRating(new Rating("Nonogram", name, Integer.parseInt(input), new Date(System.currentTimeMillis())));
+            }
+            catch (Exception e){
+                System.out.println(e.getMessage());
+            }
         }
     }
 
@@ -249,13 +282,13 @@ public class ConsoleUI {
         return size;
     }
 
-    public int averageScore(){
-        List<Score> scores= scoreService.getTopScores("Nonogram");
-        int sum=0;
-        for(Score temp: scores){
-            sum+=temp.getPoints();
+    public int averageScore() {
+        List<Score> scores = scoreService.getTopScores("Nonogram");
+        int sum = 0;
+        for (Score temp : scores) {
+            sum += temp.getPoints();
         }
-        if(scores.size()!=0)return sum/scores.size();
+        if (scores.size() != 0) return sum / scores.size();
         else return 0;
     }
 }

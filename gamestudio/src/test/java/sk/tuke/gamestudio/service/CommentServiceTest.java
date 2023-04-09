@@ -10,23 +10,23 @@ import java.util.List;
 public class CommentServiceTest {
     private CommentServiceJDBC commentServiceJDBC;
 
-    public CommentServiceTest(){
+    public CommentServiceTest() {
         commentServiceJDBC = new CommentServiceJDBC();
     }
 
     @Test
-    public void resetTest(){
+    public void resetTest() {
         commentServiceJDBC.reset();
         List<Comment> comments = commentServiceJDBC.getComments("Nonogram");
         Assertions.assertEquals(0, comments.size());
     }
 
     @Test
-    public void AddAndGetComment(){
+    public void AddAndGetComment() {
         commentServiceJDBC.reset();
         commentServiceJDBC.addComment(new Comment("Nonogram", "Tester", "This is a test", new Date(System.currentTimeMillis())));
         List<Comment> comments = commentServiceJDBC.getComments("Nonogram");
-        Assertions.assertEquals("This is a test",comments.get(0).getComment());
-        Assertions.assertEquals("Tester",comments.get(0).getPlayer());
+        Assertions.assertEquals("This is a test", comments.get(0).getComment());
+        Assertions.assertEquals("Tester", comments.get(0).getPlayer());
     }
 }
