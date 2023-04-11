@@ -16,31 +16,28 @@ public class RatingServiceRest {
 
     @GetMapping("/{game}")
     public int getAverageRating(@PathVariable String game) {
-        try{
+        try {
             return ratingService.getAverageRating(game);
-        }
-        catch(Exception e){
-            throw new RatingException("Error getting rating",e);
+        } catch (Exception e) {
+            throw new RatingException("Error getting rating", e);
         }
     }
 
     @GetMapping("/{game}/{player}")
     public int getRating(@PathVariable String game, @PathVariable String player) {
-        try{
+        try {
             return ratingService.getRating(game, player);
-        }
-        catch(Exception e){
-            throw new RatingException("Error getting rating",e);
+        } catch (Exception e) {
+            throw new RatingException("Error getting rating", e);
         }
     }
 
     @PostMapping
     public void addScore(@RequestBody Rating rating) {
-        try{
+        try {
             ratingService.setRating(rating);
-        }
-        catch(Exception e){
-            throw new RatingException("Error adding rating",e);
+        } catch (Exception e) {
+            throw new RatingException("Error adding rating", e);
         }
     }
 }

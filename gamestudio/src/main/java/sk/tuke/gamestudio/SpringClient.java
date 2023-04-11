@@ -41,7 +41,7 @@ public class SpringClient {
         return new GameField(size, size, GameField.Type.BLACKANDWHITE);
     }
 
-   @Bean
+    @Bean
     public ScoreService scoreService() {
         return new ScoreServiceRestClient();
     }
@@ -57,6 +57,8 @@ public class SpringClient {
     }
 
     @Bean
-    public RestTemplate restTemplate(){return new RestTemplate();}
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
 
 }

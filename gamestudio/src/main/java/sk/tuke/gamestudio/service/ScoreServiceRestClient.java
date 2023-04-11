@@ -16,21 +16,19 @@ public class ScoreServiceRestClient implements ScoreService {
 
     @Override
     public void addScore(Score score) {
-        try{
+        try {
             restTemplate.postForEntity(url, score, Score.class);
-        }
-        catch(Exception e){
-            throw new ScoreException("Error adding score",e);
+        } catch (Exception e) {
+            throw new ScoreException("Error adding score", e);
         }
     }
 
     @Override
     public List<Score> getTopScores(String gameName) {
-        try{
+        try {
             return Arrays.asList(Objects.requireNonNull(restTemplate.getForEntity(url + "/" + gameName, Score[].class).getBody()));
-        }
-        catch (Exception e){
-            throw new ScoreException("Error getting score",e);
+        } catch (Exception e) {
+            throw new ScoreException("Error getting score", e);
         }
     }
 

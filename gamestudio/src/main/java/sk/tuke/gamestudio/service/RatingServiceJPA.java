@@ -13,47 +13,43 @@ public class RatingServiceJPA implements RatingService {
 
     @Override
     public void setRating(Rating rating) {
-        try{
+        try {
             entityManager.persist(rating);
-        }
-        catch(Exception e){
-            throw new RatingException("Error setting rating",e);
+        } catch (Exception e) {
+            throw new RatingException("Error setting rating", e);
         }
     }
 
     @Override
     public int getAverageRating(String game) {
-        try{
+        try {
             return entityManager.createQuery("select AVG(rating) from Rating r where r.game = :game", Double.class)
                     .setParameter("game", game)
                     .getSingleResult().intValue();
-        }
-        catch(Exception e){
-            throw new RatingException("Error getting rating",e);
+        } catch (Exception e) {
+            throw new RatingException("Error getting rating", e);
         }
 
     }
 
     @Override
     public int getRating(String game, String player) {
-        try{
+        try {
             return entityManager.createQuery("select r.rating from Rating r where r.game = :game AND r.player = :player", Integer.class)
                     .setParameter("game", game)
                     .setParameter("player", player)
                     .getSingleResult();
-        }
-        catch(Exception e){
-            throw new RatingException("Error getting rating",e);
+        } catch (Exception e) {
+            throw new RatingException("Error getting rating", e);
         }
     }
 
     @Override
     public void reset() {
-        try{
+        try {
             entityManager.createNativeQuery("DELETE FROM rating").executeUpdate();
-        }
-        catch(Exception e){
-            throw new RatingException("Error resetting rating",e);
+        } catch (Exception e) {
+            throw new RatingException("Error resetting rating", e);
         }
     }
 }

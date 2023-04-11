@@ -6,7 +6,9 @@ import sk.tuke.gamestudio.entity.Rating;
 import sk.tuke.gamestudio.entity.Score;
 import sk.tuke.gamestudio.game.nonogram.core.GameField;
 import sk.tuke.gamestudio.game.nonogram.core.Tile;
-import sk.tuke.gamestudio.service.*;
+import sk.tuke.gamestudio.service.CommentService;
+import sk.tuke.gamestudio.service.RatingService;
+import sk.tuke.gamestudio.service.ScoreService;
 
 import java.util.Date;
 import java.util.List;
@@ -186,13 +188,12 @@ public class ConsoleUI {
         }
     }
 
-    public void handleScore(){
+    public void handleScore() {
         System.out.println("Your score is: " + gameField.getScore());
-        try{
-            System.out.println("Average score is: "+ ratingService.getAverageRating("Nonogram"));
+        try {
+            System.out.println("Average score is: " + ratingService.getAverageRating("Nonogram"));
             scoreService.addScore(new Score("Nonogram", name, gameField.getScore(), new Date(System.currentTimeMillis())));
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
@@ -211,10 +212,9 @@ public class ConsoleUI {
         if (input.equals("y") || input.equals("Y")) {
             System.out.print("Write comment: ");
             input = scanner.nextLine();
-            try{
+            try {
                 commentService.addComment(new Comment("Nonogram", name, input, new Date(System.currentTimeMillis())));
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -230,8 +230,7 @@ public class ConsoleUI {
                 for (Comment temp : comments) {
                     System.out.println("Player: " + temp.getPlayer() + " says: " + temp.getComment());
                 }
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -256,10 +255,9 @@ public class ConsoleUI {
                 matcher = patternRating.matcher(input);
             }
             while (!matcher.matches());
-            try{
+            try {
                 ratingService.setRating(new Rating("Nonogram", name, Integer.parseInt(input), new Date(System.currentTimeMillis())));
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -270,7 +268,7 @@ public class ConsoleUI {
         Matcher matcher;
         String input;
         Scanner sizeScanner = new Scanner(System.in);
-        int size = 0;
+        int size;
         do {
             System.out.print("Enter size of gamefield: (5 or 10) ");
             input = sizeScanner.nextLine();
@@ -280,15 +278,5 @@ public class ConsoleUI {
         while (!matcher.matches());
         size = Integer.parseInt(input, 10);
         return size;
-    }
-
-    public int averageScore() {
-        List<Score> scores = scoreService.getTopScores("Nonogram");
-        int sum = 0;
-        for (Score temp : scores) {
-            sum += temp.getPoints();
-        }
-        if (scores.size() != 0) return sum / scores.size();
-        else return 0;
     }
 }

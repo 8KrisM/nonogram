@@ -6,7 +6,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.SimpleTimeZone;
 
 @Transactional
 public class CommentServiceJPA implements CommentService {
@@ -15,11 +14,10 @@ public class CommentServiceJPA implements CommentService {
 
     @Override
     public void addComment(Comment comment) {
-        try{
+        try {
             entityManager.persist(comment);
-        }
-        catch(Exception e){
-            throw new CommentException("Error adding comment",e);
+        } catch (Exception e) {
+            throw new CommentException("Error adding comment", e);
         }
     }
 
@@ -29,20 +27,18 @@ public class CommentServiceJPA implements CommentService {
             return entityManager.createQuery("select c from Comment c where c.game = :game", Comment.class)
                     .setParameter("game", game)
                     .getResultList();
-        }
-        catch(Exception e){
-            throw new CommentException("Error getting comment",e);
+        } catch (Exception e) {
+            throw new CommentException("Error getting comment", e);
         }
     }
 
 
     @Override
     public void reset() {
-        try{
+        try {
             entityManager.createNativeQuery("DELETE FROM comment").executeUpdate();
-        }
-        catch(Exception e){
-            throw new CommentException("Error resetting comment",e);
+        } catch (Exception e) {
+            throw new CommentException("Error resetting comment", e);
         }
     }
 }

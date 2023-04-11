@@ -14,6 +14,7 @@ public class GameStudioServer {
     public static void main(String[] args) {
         SpringApplication.run(GameStudioServer.class, args);
     }
+
     @Bean
     public ScoreService scoreService() {
         return new ScoreServiceJPA();

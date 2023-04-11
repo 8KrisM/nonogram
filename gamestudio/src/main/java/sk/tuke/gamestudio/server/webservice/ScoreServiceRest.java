@@ -17,21 +17,19 @@ public class ScoreServiceRest {
 
     @GetMapping("/{game}")
     public List<Score> getTopScores(@PathVariable String game) {
-        try{
+        try {
             return scoreService.getTopScores(game);
-        }
-        catch (Exception e){
-            throw new ScoreException("Error getting scores",e);
+        } catch (Exception e) {
+            throw new ScoreException("Error getting scores", e);
         }
     }
 
     @PostMapping
     public void addScore(@RequestBody Score score) {
-        try{
+        try {
             scoreService.addScore(score);
-        }
-        catch(Exception e){
-            throw new ScoreException("Error adding score",e);
+        } catch (Exception e) {
+            throw new ScoreException("Error adding score", e);
         }
     }
 }

@@ -17,21 +17,19 @@ public class CommentServiceRestClient implements CommentService {
 
     @Override
     public void addComment(Comment comment) {
-        try{
+        try {
             restTemplate.postForEntity(url, comment, Comment.class);
-        }
-        catch (Exception e){
-            throw new CommentException("Error adding comment",e);
+        } catch (Exception e) {
+            throw new CommentException("Error adding comment", e);
         }
     }
 
     @Override
     public List<Comment> getComments(String game) {
-        try{
+        try {
             return Arrays.asList(Objects.requireNonNull(restTemplate.getForEntity(url + "/" + game, Comment[].class).getBody()));
-        }
-        catch (Exception e){
-            throw new CommentException("Error getting comments",e);
+        } catch (Exception e) {
+            throw new CommentException("Error getting comments", e);
         }
     }
 

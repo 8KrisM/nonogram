@@ -17,21 +17,19 @@ public class CommentServiceRest {
 
     @GetMapping("/{game}")
     public List<Comment> getComments(@PathVariable String game) {
-        try{
+        try {
             return commentService.getComments(game);
-        }
-        catch (Exception e){
-            throw new CommentException("Error getting comments",e);
+        } catch (Exception e) {
+            throw new CommentException("Error getting comments", e);
         }
     }
 
     @PostMapping
     public void addComment(@RequestBody Comment comment) {
-        try{
+        try {
             commentService.addComment(comment);
-        }
-        catch (Exception e){
-            throw new CommentException("Error adding comment",e);
+        } catch (Exception e) {
+            throw new CommentException("Error adding comment", e);
         }
     }
 }
