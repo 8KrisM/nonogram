@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+
+<header th:fragment="header">
+    <!--/*@thymesVar id="userController" type="sk.tuke.gamestudio.server.controller.UserController"*/-->
+    <div th:if="${@userController.logged}">
+        Logged as: <span th:text="${@userController.loggedUser.login}"/>
+        <a href="/logout">Logout</a>
+    </div>
+
+    <div th:if="not ${@userController.logged}">
+        Not logged. Please
+        <a href="/">login</a>.
+    </div>
+</header>
+
+<footer th:fragment="footer">
+    <hr/>
+    <span>&copy; 2023 Gamestudio was developed at <a href="http://kpi.fei.tuke.sk">KPI FEI TUKE</a></span>
+</footer>
+
+<div th:fragment="scores(scores)">
+    <h1>Top scores</h1>
+    <div class="panel">
+        <div class="scores">
+            <!--/*@thymesVar id="scores" type="java.util.List<sk.tuke.gamestudio.entity.Score>"*/-->
+            <div class="score" th:each="score, it : ${scores}">
+                <div class="scoreSections">
+                    <div class="scoreInfo">
+                        <span th:text="${score.player}"/>
+                        <span th:text="'Played on: '+${#dates.format(score.getPlayedOn, 'dd.MM.yyyy HH:mm')}" class="playedOn"/>
+                    </div>
+                    <div class="position">
+                        <span th:text="${it.index + 1}"/>
+                        <span class="playedOn" th:text="'Score: '+${score.points}"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="comments(comments)">
+    <h1>Comments</h1>
+    <div class="panel">
+        <div class="comments">
+            <!--/*@thymesVar id="comments" type="java.util.List<sk.tuke.gamestudio.entity.Comment>"*/-->
+                <div class="comment" th:each="comment, it : ${comments}">
+                    <div class="commentSections">
+                        <div class="commentInfo">
+                            <span th:text="${comment.player}"/>
+                            <span th:text="'Commented on: '+${#dates.format(comment.getCommentedOn, 'dd.MM.yyyy HH:mm')}" class="commentedOn"/>
+                        </div>
+                        <div class="commentContent">
+                            <span th:text="${comment.comment}"/>
+                        </div>
+                    </div>
+                </div>
+            <div th:if="${@userController.logged}">
+                <div class="addComment">
+                    <form action="/nonogram/comment" method="post">
+                        <input type="text" name="comment" placeholder="type your comment here" class="inputField">
+                        <input type="submit" value="Post" class="submitButton"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div th:fragment="rating(rating)">
+    <h1>Your rating</h1>
+    <div class="panel">
+        <table class="gamefield">
+            <tr>
+                <td th:each="column : ${#numbers.sequence(1,5)}"
+                    th:class="${column <= rating} ? 'filled' : 'unmarked'">
+                    <a th:href="${'/nonogram/rate?rating=' + column}"/>
+                </td>
+                <td>
+                    <span  th:text="${rating}"></span>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div th:fragment="averageRating(rating)">
+    <h1>Average rating</h1>
+    <div class="panel">
+        <table class="gamefield">
+            <tr>
+                <td th:each="column : ${#numbers.sequence(1,5)}"
+                    th:class="${column <= rating} ? 'filled' : 'unmarkedAvg'">
+                </td>
+                <td>
+                    <span  th:text="${rating}"></span>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+
+</html>

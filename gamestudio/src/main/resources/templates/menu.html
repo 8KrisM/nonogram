@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/template.html}">
+
+
+<head>
+    <meta charset="UTF-8">
+    <title>Gamestudio</title>
+    <link rel="stylesheet" href="/css/style.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<div th:replace="fragments/fragments :: header"/>
+<main layout:fragment="content" class="menu">
+    <h1>Nonogram</h1>
+            <div class="menu-panel">
+            <!--/*@thymesVar id="sizes" type="java.util.List<int[]>"*/-->
+            <form action="/nonogram/new" method="post">
+                <select name="size" id="size" class="inputField">
+                    <option   th:each="size: ${sizes}" th:value="${size[0]}+'x' + ${size[1]}" th:text="${size[0]}+'x' + ${size[1]}"></option>
+                </select>
+                <input type="submit"  value="Play" class="submitButton">
+            </form>
+
+            <a class="abutton-menu" href="/menu/create">Create a nonogram</a>
+            <a class="abutton-menu" href="/menu/howTo">How to play</a>
+        </div>
+</main>
+    <footer>Created by Kristián Michalik - 2023</footer>
+</html>

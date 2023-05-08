@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/template.html}">
+
+
+<head>
+    <meta charset="UTF-8">
+    <title>Gamestudio</title>
+    <link rel="stylesheet" href="/css/style.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<!--/*@thymesVar id="nonogramsController" type="sk.tuke.gamestudio.server.controller.NonogramController"*/-->
+<div th:replace="fragments/fragments :: header"/>
+<main layout:fragment="content">
+    <h1>Nonogram</h1>
+
+    <!-- Game controls -->
+    <div class="nonogramControl">
+        <span th:if="not ${@nonogramController.marking}">
+            <span class="gameInfo"> Mode: FILLING tiles.</span>
+        </span>
+
+        <span th:if="${@nonogramController.marking}">
+            <span class="gameInfo"> Mode: MARKING BLANK tiles.</span>
+        </span>
+
+
+        <span class="gameInfo">
+                Game state: <span th:text="${field.state}"/>
+            </span>
+
+
+        <span class="gameInfo">
+                Left chances: <span th:text="${field.getChances}"/>
+            </span>
+        <span class="gameInfo">
+                Current score: <span th:text="${field.getScore}"/>
+            </span>
+    </div>
+
+    <!-- Game field generated in java -->
+    <!--<div th:utext="${@nonogramController.htmlField}"/>-->
+
+     <!--/*@thymesVar id="field" type="sk.tuke.gamestudio.game.nonogram.core.GameField"*/-->
+    <!-- Game field generated in thymeleaf, expects field stored in a model -->
+    <div class="panel">
+    <table class="gamefield">
+        <tr th:each="row : ${#numbers.sequence(0, field.getRows - 1)}">
+            <td th:each="column : ${#numbers.sequence(0, field.getColumns - 1)}"
+                th:with="tile = ${field.getGuessedTile(row, column)}"
+                th:class="${@nonogramController.getTileClass(tile)}">
+                <a th:href="${'/nonogram?row=' + row + '&column=' + column}">
+                    <span th:text="${@nonogramController.getTileText(tile)}"/>
+                </a>
+            </td>
+            <td th:each="clue : ${@nonogramController.getOneRowClue(row)}">
+                <span th:if="${clue != 0}" th:text="${clue}"></span>
+            </td>
+        </tr>
+        <tr th:each="i, row : ${#numbers.sequence(0, columnClues.length - 1)}">
+            <td th:each="column : ${columnClues[i]}">
+                <span th:if="${column != 0}" th:text="${column}"></span>
+            </td>
+        </tr>
+    </table>
+    </div>
+    <div class="gameButtons">
+
+        <a class="abutton" href="/menu">Start a new game</a>
+        <span th:if="not ${@nonogramController.marking}">
+            <a class="abutton" href="/nonogram/mark">Change to MARK BLANK</a>
+        </span>
+
+        <span th:if="${@nonogramController.marking}">
+            <a class="abutton" href="/nonogram/mark">Change to FILLING</a>
+        </span>
+
+        <a class="abutton" href="/nonogram/check">Check the nonogram</a>
+        <a class="abutton" href="/nonogram/help">Random help</a>
+    </div>
+    <!-- Table with best scores -->
+    <div class="tables-flex">
+
+        <div class="tables">
+                <!--/*@thymesVar id="rating" type="java.util.List<sk.tuke.gamestudio.entity.Rating>"*/-->
+                <div th:replace="fragments/fragments :: rating(${rating})"/>
+            </div>
+        <div class="tables">
+            <!--/*@thymesVar id="averageRating" type="java.util.List<sk.tuke.gamestudio.entity.Rating>"*/-->
+            <div th:replace="fragments/fragments :: averageRating(${averageRating})"/>
+        </div>
+
+        <div class="tables">
+            <!--/*@thymesVar id="scores" type="java.util.List<sk.tuke.gamestudio.entity.Score>"*/-->
+            <div th:replace="fragments/fragments :: scores(${scores})"/>
+        </div>
+        <div class="tables">
+            <!--/*@thymesVar id="comments" type="java.util.List<sk.tuke.gamestudio.entity.Comment>"*/-->
+            <div th:replace="fragments/fragments :: comments(${comments})"/>
+        </div>
+    </div>
+</main>
+<footer>Created by Kristián Michalik - 2023</footer>
+</html>
+

@@ -3,8 +3,12 @@ package sk.tuke.gamestudio.service;
 import sk.tuke.gamestudio.entity.Rating;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
+import java.util.Date;
+import java.util.List;
 
 @Transactional
 public class RatingServiceJPA implements RatingService {
@@ -14,7 +18,18 @@ public class RatingServiceJPA implements RatingService {
     @Override
     public void setRating(Rating rating) {
         try {
-            entityManager.persist(rating);
+            TypedQuery<Rating> query = entityManager.createQuery("SELECT r FROM Rating r WHERE r.player = :player", Rating.class);
+            query.setParameter("player", rating.getPlayer());
+            List<Rating> ratings = query.getResultList();
+
+            if (!ratings.isEmpty()) {
+                Rating existingRating = ratings.get(0);
+                existingRating.setPoints(rating.getRating());
+                existingRating.setRatedOn(rating.getRatedOn());
+                entityManager.merge(existingRating);
+            } else {
+                entityManager.persist(rating);
+            }
         } catch (Exception e) {
             throw new RatingException("Error setting rating", e);
         }

@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 public class GameField {
@@ -48,6 +50,7 @@ public class GameField {
     private LocalTime timeAtStart;
     private int chances;
     private int helpUses;
+    private int[][] columnClues;
 
     public GameField(int rows, int columns, Type type) {
         this.chances = 3;
@@ -65,6 +68,7 @@ public class GameField {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        columnClues=columnClue();
         timeAtStart = LocalTime.now();
     }
 
@@ -112,6 +116,10 @@ public class GameField {
         return chances;
     }
 
+    public int[][] getColumnClues() {
+        return columnClues;
+    }
+
     public void setColors(ArrayList<Color> colors) {
         this.colors = colors;
     }
@@ -151,14 +159,14 @@ public class GameField {
     public Tile[][] getRandomNonogram() throws IOException {
         TilesFactory factory = new TilesFactory();
         Tile[][] randomNonogram = factory.createEmptyTiles("tiles");
-        InputStream inputStream = GameField.class.getResourceAsStream("/" + rows + "x" + columns);
+        InputStream inputStream = GameField.class.getResourceAsStream("/maps/" + rows + "x" + columns);
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         int lines = 0;
         while (reader.readLine() != null) lines++;
         reader.close();
         Random random = new Random();
         int randomLine = random.nextInt(lines);
-        inputStream = GameField.class.getResourceAsStream("/" + rows + "x" + columns);
+        inputStream = GameField.class.getResourceAsStream("/maps/" + rows + "x" + columns);
         reader = new BufferedReader(new InputStreamReader(inputStream));
         String line;
         int currentLine = 0;
@@ -176,14 +184,17 @@ public class GameField {
     }
 
     public Boolean isSolved() {
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < columns; j++) {
-                if (tiles[i][j].getState() != guessedTiles[i][j].getState()) {
-                    chances--;
-                    if (chances < 1) {
-                        state = State.FAILED;
+        if (state == State.FAILED) return false;
+        if (state == State.PLAYING) {
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < columns; j++) {
+                    if ((tiles[i][j].getState() == Tile.State.FILLED && guessedTiles[i][j].getState() != Tile.State.FILLED) || (tiles[i][j].getState() == Tile.State.UNMARKED && guessedTiles[i][j].getState() == Tile.State.FILLED) || (tiles[i][j].getState() == Tile.State.BLANK && guessedTiles[i][j].getState() == Tile.State.FILLED)) {
+                        chances--;
+                        if (chances < 1) {
+                            state = State.FAILED;
+                        }
+                        return false;
                     }
-                    return false;
                 }
             }
         }
@@ -235,4 +246,84 @@ public class GameField {
             }
         }
     }
+
+    public List<List<Integer>> rowClues() {
+        List<List<Integer>> rowClues= new ArrayList<>();
+        for(int i=0; i<rows; i++) {
+            int run = 0;
+            List<Integer> clue = new ArrayList<>();
+            for (int k = 0; k < columns; k++) {
+                if (getTile(i, k).getState() == Tile.State.FILLED) run++;
+                else {
+                    if (run != 0) clue.add(run);
+                    run = 0;
+                }
+                if (run != 0 && k == columns - 1) clue.add(run);
+            }
+            rowClues.add(clue);
+        }
+        int maxLength=0;
+        for (List<Integer> list : rowClues) {
+            int size = list.size();
+            if (size > maxLength) {
+                maxLength = size;
+            }
+        }
+        for (List<Integer> list : rowClues) {
+            int size = list.size();
+            if (size < maxLength) {
+                int diff = maxLength - size;
+                List<Integer> zeros = new ArrayList<>(Collections.nCopies(diff, 0));
+                list.addAll(zeros);
+            }
+        }
+        return rowClues;
+    }
+
+    public int[][] columnClue() {
+        int realRows=rows/2+1;
+        int[][] columnClues = new int[realRows][columns];
+        int[][] shortened;
+        int zeros;
+        int clueRow = 0;
+        for (int j = 0; j < columns; j++) {
+            int count = 0;
+            for (int i = 0; i < rows; i++) {
+                if (getTile(i, j).getState() == Tile.State.FILLED) {
+                    count++;
+                } else if (count > 0) {
+                    columnClues[clueRow][j] = count;
+                    count = 0;
+                    clueRow++;
+                }
+            }
+            if (count > 0) {
+                columnClues[clueRow][j] = count;
+            }
+            clueRow = 0;
+        }
+        int zeroRow=0;
+        for(int i=0; i<realRows; i++){
+            for(int j=0; j<columns; j++){
+                if(columnClues[i][j]==0)zeroRow++;
+            }
+            if(zeroRow==columns){
+                if(realRows>i+1)realRows=i;
+                break;
+            }
+            zeroRow=0;
+        }
+        if(zeroRow==columns) {
+            int realColumnClues[][] = new int[realRows][columns];
+            for (int i = 0; i < realRows; i++) {
+                for (int j = 0; j < columns; j++) {
+                    realColumnClues[i][j] = columnClues[i][j];
+                }
+            }
+            return realColumnClues;
+        }
+        else return columnClues;
+    }
+
+
 }

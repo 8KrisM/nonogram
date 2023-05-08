@@ -1,0 +1,338 @@
+header{
+    color: black;
+}
+
+body {
+    background-color: white;
+    max-width: 80%;
+    font-size: 1rem;
+    font-family: Arial, "Arial CE", "Helvetica CE", sans-serif;
+    color: black;
+    margin: auto;
+    padding: 1em;
+    text-align: center;
+}
+
+h1{
+  background: -webkit-linear-gradient(45deg, #580EF6 35%, white);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 2.2em;
+}
+
+h2 {
+    font-size: 1.4em
+}
+
+h3 {
+    font-size: 1.2em
+}
+
+a:link, a:visited {
+    color: #045491;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+a:link:hover, a:visited:hover {
+    color: #045491;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+/*Properties of the form elements*/
+
+label {
+    vertical-align: top;
+    display: inline-block; /*instead of inline (default)*/
+    min-width: 5em;
+}
+
+form{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.inputField{
+  width: 48%;
+  height: 40px;
+  border-radius: 3px;
+  border: 1px solid #3D3A50;
+  font-size: 80%;
+  text-indent: 10px;
+}
+
+input.submitButton{
+  width: 48%;
+  background-color: #3D3A50;
+  color: white;
+  border: 0px;
+  border-radius: 3px;
+}
+
+input.submitButton:hover{
+    cursor: pointer;
+    box-shadow: 1px 1px 10px black;
+}
+
+/*Properties of the tables with scores*/
+table.scores {
+    border: black 2px;
+}
+
+table.scores th {
+    font-weight: bold;
+    color: #FFFFFF;
+    background-color: dimgray;
+
+}
+
+table.scores tr:nth-child(even) {
+    background-color: lightgray
+}
+
+table.scores tr:nth-child(odd) {
+    background-color: white;
+}
+
+
+div.nonogramControl span.gameInfo{
+    display: inline-block;
+    width: 14em;
+}
+
+
+table.gamefield td {
+    text-align: center;
+    background-color: #3D3A50;
+    width: 1.5em;
+    height: 1.5em;
+    font-size: 1.0em;
+    border-radius: 0.1em;
+}
+
+table.gamefield a:link,
+table.gamefield a:visited,
+table.gamefield a:link:hover,
+table.gamefield a:visited:hover {
+    color: inherit;
+    font-weight: normal;
+    text-decoration: none;
+}
+
+table.gamefield a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+table.gamefield td.unmarkedAvg,
+table.gamefield td.unmarked,
+ table.gamefield td.blank{
+    background-color: white;
+    color: black;
+}
+
+table.gamefield td:hover {
+    background-color: #3D3A50;
+}
+
+table.gamefield td.unmarkedAvg:hover{
+    background-color: white;
+}
+
+table.gamefield td.closed span {
+    display: none;
+}
+
+
+table.gamefield td.filled {
+    background-color: black;
+}
+
+table.gamefield td.marked span {
+    display: none;
+}
+
+div.menu-panel,
+div.panel{
+    display: flex;
+    justify-content: center;
+    align-items: center
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    padding: 20px;
+    background-color: #580EF6;
+    color: white;
+    border-radius: 10px;
+    box-shadow: 1px 1px 12px #580EF6;
+}
+
+
+div.menu-panel{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 50%;
+    text-align: center;
+    margin: 10px auto;
+}
+
+div.nonogramControl,
+div.gameButtons{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+
+div.nonogramControl{
+    color: #3D3A50;
+}
+
+a.abutton-menu,
+a.abutton{
+    display: block;
+    text-align: center;
+    width: 13em;
+    padding: 0.3em;
+    margin-top: 3px;
+    background-color: #3D3A50;
+    font-weight: normal;
+    color: white;
+    border-radius: 3px;
+    box-shadow: 1px 1px 10px black;
+}
+a.abutton-menu:hover,
+a.abutton:hover {
+    transform: scale(1.01);
+    text-decoration: none;
+    color: lightgray;
+    box-shadow: 1px 1px 12px #580EF6;
+}
+
+a.abutton-menu{
+    margin: 10px auto 0px;
+    box-shadow: none;
+}
+
+div.tables{
+    width: 47%;
+}
+
+div.tables-flex{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+div.scores,
+div.comments{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 5px;
+}
+
+div.score,
+div.comment{
+    color: white;
+    background-color: #3D3A50;
+    margin: 5px;
+    padding: 8px;
+    border-radius: 5px;
+}
+
+div.scoreSections,
+div.commentSections{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+div.scoreInfo,
+div.commentInfo{
+    display: flex;
+    flex-direction:column;
+    justify-content: flex-start;
+    text-align: left;
+    width: 50%;
+}
+
+span.playedOn,
+span.commentedOn{
+    color: lightgray;
+    font-size: 0.7em;
+}
+
+div.position{
+    display: flex;
+    flex-direction:column;
+    justify-content: flex-end;
+    text-align: right;
+}
+
+div.addComment{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    color: black;
+    background-color: white;
+    margin: 5px;
+    padding: 8px;
+    border-radius: 5px;
+}
+
+/*adjustment for smaller screens/viewports*/
+@media (max-width: 800px)/*,
+(min-resolution: 1.8dppx) */ {
+    body {
+        max-width: 95vw;
+    }
+
+    div.tables-flex{
+        flex-direction: column;
+    }
+
+    div.tables{
+    width: 100%;
+    }
+
+    table.gamefield td {
+        font-size: 1em;
+        width: 10vw;
+        height: 10vw;
+        min-width: 1em;
+        min-height: 1em;
+    }
+
+    div.nonogramControl,
+    div.gameButtons{
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    span.gameInfo,
+    a.abutton{
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+
+}
+
+@media (max-height: 780px),
+(max-width: 600px) and (orientation: landscape)/*,
+(min-resolution: 1.8dppx)  and (orientation:landscape)*/ {
+
+    table.gamefield td {
+        font-size: 1em;
+        width: 4vh;
+        height: 4vh;
+    }
+}
