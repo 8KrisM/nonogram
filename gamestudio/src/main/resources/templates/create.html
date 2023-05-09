@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/template.html}">
+
+
+<head>
+    <meta charset="UTF-8">
+    <title>Gamestudio</title>
+    <link rel="stylesheet" href="/css/style.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<!--/*@thymesVar id="creatorController" type="sk.tuke.gamestudio.server.controller.CreatorController"*/-->
+<div th:replace="fragments/fragments :: header"/>
+<main layout:fragment="content">
+    <h1>Nonogram creator</h1>
+
+    <!-- Game controls -->
+    <div class="nonogramControl">
+        <span th:if="not ${@creatorController.marking}">
+            <span class="gameInfo"> Mode: FILLING tiles.</span>
+        </span>
+
+        <span th:if="${@creatorController
+        .marking}">
+            <span class="gameInfo"> Mode: MARKING BLANK tiles.</span>
+        </span>
+    </div>
+
+
+    <!--/*@thymesVar id="field" type="sk.tuke.gamestudio.game.nonogram.core.GameField"*/-->
+    <!-- Game field generated in thymeleaf, expects field stored in a model -->
+    <div class="panel">
+        <table class="gamefield">
+            <tr th:each="row : ${#numbers.sequence(0, field.getRows - 1)}">
+                <td th:each="column : ${#numbers.sequence(0, field.getColumns - 1)}"
+                    th:with="tile = ${field.getGuessedTile(row, column)}"
+                    th:class="${@creatorController
+                    .getTileClass(tile)}">
+                    <span th:if="not ${@creatorController.saved}"><a th:href="${'/creator/mark?row=' + row + '&column=' + column}"></span>
+                        <span th:text="${@creatorController.getTileText(tile)}"/>
+                    </a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="gameButtons">
+
+        <!--/*@thymesVar id="userController" type="sk.tuke.gamestudio.server.controller.UserController"*/-->
+        <span th:if="not ${@creatorController.saved}"><span th:if="${@userController.logged}"><a class="abutton" href="/creator/save">Post nonogram</a></span></span>
+        <a class="abutton" href="/menu">Main menu</a>
+        <span th:if="not ${@creatorController.marking}">
+            <a class="abutton" href="/creator/marking">Change to MARK BLANK</a>
+        </span>
+
+        <span th:if="${@creatorController.marking}">
+            <a class="abutton" href="/creator/marking">Change to FILLING</a>
+        </span>
+
+    </div>
+</main>
+</html>

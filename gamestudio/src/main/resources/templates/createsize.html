@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/template.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Gamestudio</title>
+    <link rel="stylesheet" href="/css/style.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+    <div th:replace="fragments/fragments :: header"/>
+    <main layout:fragment="content">
+        <h1>Gamestudio</h1>
+        <div class="menu-panel">
+            <span>Create your own nonogram (min. 5x5 max. 99x99)</span>
+                <form action="/creator" method="post" style="margin: 10px 0px;">
+                    <input type="text" name="rows" class="inputField" placeholder="Rows" style="margin: 0px 4px;"><br/>
+                    <input type="text" name="columns" class="inputField" placeholder="Columns" style="margin: 0px 4px;"><br/>
+                    <input type="submit" value="Create" class="submitButton"/>
+                </form>
+        </div>
+    </main>
+</html>

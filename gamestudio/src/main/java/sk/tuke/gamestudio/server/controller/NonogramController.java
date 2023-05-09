@@ -12,7 +12,6 @@ import org.springframework.web.context.WebApplicationContext;
 import sk.tuke.gamestudio.entity.Comment;
 import sk.tuke.gamestudio.entity.Rating;
 import sk.tuke.gamestudio.entity.Score;
-import sk.tuke.gamestudio.entity.User;
 import sk.tuke.gamestudio.game.nonogram.core.GameField;
 import sk.tuke.gamestudio.game.nonogram.core.Tile;
 import sk.tuke.gamestudio.service.CommentService;
@@ -92,9 +91,12 @@ public class NonogramController {
             rows = Integer.parseInt(matcher.group(1));
             columns = Integer.parseInt(matcher.group(2));
         }
-        field = new GameField(rows, columns, GameField.Type.BLACKANDWHITE);
-        columnClues= getColumnClues();
-        rowClues=getRowClues();
+        try{
+            field = new GameField(rows, columns, GameField.Type.BLACKANDWHITE);
+        }
+        catch(Exception e){ throw new RuntimeException(e.getMessage());}
+        columnClues= field.getColumnClues();
+        rowClues=field.rowClues();
         prepareModel(model);
         return "nonogram";
     }
@@ -108,7 +110,7 @@ public class NonogramController {
 
     @PostMapping("nonogram/comment")
     public String login(@RequestParam String comment, Model model) {
-        if (userController.isLogged()) {
+        if (userController.isLogged() &&!comment.isEmpty()) {
             Comment newComment = new Comment("Nonogram",userController.getLoggedUser().getLogin(),comment,new Date(System.currentTimeMillis()));
             commentService.addComment(newComment);
         }
@@ -117,7 +119,7 @@ public class NonogramController {
     }
 
     @GetMapping("nonogram/rate")
-    public String eate(@RequestParam int rating, Model model) {
+    public String rate(@RequestParam int rating, Model model) {
         if (userController.isLogged()) {
             Rating newRating = new Rating("Nonogram",userController.getLoggedUser().getLogin(),rating,new Date(System.currentTimeMillis()));
             ratingService.setRating(newRating);
@@ -146,12 +148,6 @@ public class NonogramController {
         sb.append("</table>\n");
         return sb.toString();
     }
-
-    public int[][] getColumnClues(){
-        return field.getColumnClues();
-    }
-
-    public List<List<Integer>> getRowClues(){return field.rowClues();}
 
     public String getTileClass(Tile tile) {
         switch (tile.getState()) {

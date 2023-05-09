@@ -4,28 +4,40 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.context.WebApplicationContext;
-import sk.tuke.gamestudio.entity.User;
 import sk.tuke.gamestudio.game.nonogram.core.Maps;
-
-import java.util.List;
 
 @Controller
 @Scope(WebApplicationContext.SCOPE_SESSION)
 public class MenuController {
-        private Maps maps=new Maps();
 
-        @GetMapping("/menu")
-        public String login(Model model) {
-            prepareModel(model);
-            return "menu";
-        }
+    private boolean howTo=false;
+    @GetMapping("/menu")
+    public String menu(Model model) {
+        prepareModel(model);
+        return "menu";
+    }
 
+    @GetMapping("/menu/create")
+    public String create(Model model) {
+        prepareModel(model);
+        return "createsize";
+    }
+
+    @GetMapping("/menu/howTo")
+    public String howTo(Model model) {
+        howTo=!howTo;
+        prepareModel(model);
+        return "menu";
+    }
+
+    public boolean isHowTo() {
+        return howTo;
+    }
 
     private void prepareModel(Model model) {
         try{
-            model.addAttribute("sizes", maps.getAvailableSizes());
+            model.addAttribute("sizes", Maps.getAvailableSizes());
         }
         catch(Exception ignored){
         }

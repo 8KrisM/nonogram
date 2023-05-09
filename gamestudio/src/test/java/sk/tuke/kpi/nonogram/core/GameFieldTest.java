@@ -16,7 +16,10 @@ public class GameFieldTest {
         rows = 5;
         columns = 5;
         type = GameField.Type.BLACKANDWHITE;
-        gamefield = new GameField(rows, columns, type);
+        try{
+            gamefield = new GameField(rows, columns, type);
+        }
+        catch (Exception e){throw new RuntimeException(e.getMessage());}
     }
 
     @Test

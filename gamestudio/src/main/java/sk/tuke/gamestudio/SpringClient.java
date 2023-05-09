@@ -36,7 +36,7 @@ public class SpringClient {
     }
 
     @Bean
-    public GameField field() {
+    public GameField field() throws Exception {
         int size = new ConsoleUI().selectSize();
         return new GameField(size, size, GameField.Type.BLACKANDWHITE);
     }
@@ -55,6 +55,9 @@ public class SpringClient {
     public CommentService commentService() {
         return new CommentServiceRestClient();
     }
+
+    @Bean
+    public UserService userService(){return new UserServiceJPA();}
 
     @Bean
     public RestTemplate restTemplate() {

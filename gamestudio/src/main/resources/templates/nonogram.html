@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
-<!--/*@thymesVar id="nonogramsController" type="sk.tuke.gamestudio.server.controller.NonogramController"*/-->
+<!--/*@thymesVar id="nonogramController" type="sk.tuke.gamestudio.server.controller.NonogramController"*/-->
 <div th:replace="fragments/fragments :: header"/>
 <main layout:fragment="content">
     <h1>Nonogram</h1>
@@ -68,7 +68,7 @@
     </div>
     <div class="gameButtons">
 
-        <a class="abutton" href="/menu">Start a new game</a>
+        <a class="abutton" href="/menu">Main menu</a>
         <span th:if="not ${@nonogramController.marking}">
             <a class="abutton" href="/nonogram/mark">Change to MARK BLANK</a>
         </span>

@@ -11,6 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
+<!--/*@thymesVar id="menuController" type="sk.tuke.gamestudio.server.controller.MenuController"*/-->
 <div th:replace="fragments/fragments :: header"/>
 <main layout:fragment="content" class="menu">
     <h1>Nonogram</h1>
@@ -26,6 +27,17 @@
             <a class="abutton-menu" href="/menu/create">Create a nonogram</a>
             <a class="abutton-menu" href="/menu/howTo">How to play</a>
         </div>
+
+    <div th:if="${@menuController.howTo}">
+        <h1>How to play</h1>
+        <div class="menu-panel">
+            The goal is to fill in the right cells to create a hidden image.<br>
+            Along the bottom and right sides of the grid, you'll see rows and columns of numbers. These numbers indicate the sequence of filled cells in that row or column. For example, if you see the number "2 3" next to a row, it means there are two filled cells followed by at least one blank cell, and then three more filled cells.<br>
+            Use logic to determine which cells to fill in. You can start by looking for rows or columns where the number of filled cells is already known, and using that information to fill in adjacent cells. For example, if you know that a row has five filled cells and the row is only seven cells long, you know that the remaining two cells must be blank.<br>
+            Keep going, using logic and deduction to fill in as many cells as you can. Be careful not to make assumptions or guesses that could lead you down the wrong path.<br>
+            When you're finished, you should have filled in all the cells that create the hidden image. If you've made any mistakes, you'll likely notice that the picture doesn't look quite right.<br>
+            Nonograms come in different sizes and levels of difficulty, so keep practicing and challenging yourself to get better.
+        </div>
+    </div>
 </main>
-    <footer>Created by Kristián Michalik - 2023</footer>
 </html>

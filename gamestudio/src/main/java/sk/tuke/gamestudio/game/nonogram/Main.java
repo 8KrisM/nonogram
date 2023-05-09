@@ -2,9 +2,6 @@ package sk.tuke.gamestudio.game.nonogram;
 
 import sk.tuke.gamestudio.game.nonogram.consoleui.ConsoleUI;
 import sk.tuke.gamestudio.game.nonogram.core.GameField;
-import sk.tuke.gamestudio.game.nonogram.core.Maps;
-
-import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws Exception {

@@ -14,15 +14,26 @@
 
 
 <main layout:fragment="content">
+    <h1>Gamestudio</h1>
+    <div class="menu-panel">
     <!--/*@thymesVar id="userController" type="sk.tuke.gamestudio.server.controller.UserController"*/-->
-    <span th:if="not ${@userController.logged}">
-        Please login to save score, comment and rate our games!<br/>
-        <form action="/login" method="post">
-            Login:<input type="text" name="login"><br/>
-            Password:<input type="password" name="passwd"><br/>
-            <input type="submit" value="Login"/>
-        </form>
-    </span>
+        <span th:if="not ${@userController.logged}">
+            Please login to save score, comment and rate our games!<br/>
+            <form action="/login" method="post" style="margin: 10px 0px;">
+                <input type="text" name="login" class="inputField" placeholder="Login" style="margin: 0px 4px;"><br/>
+                <input type="password" name="passwd" class="inputField" placeholder="Password" style="margin: 0px 4px;"><br/>
+                <input th:if="not ${@userController.register}" type="submit" value="Login" class="submitButton"/>
+                <input th:if=" ${@userController.register}" type="submit" value="Register" class="submitButton"/>
+            </form>
+            <span th:if="not ${@userController.register}"> Not registered?
+                <a class="abutton-menu" href="/login/register">Register</a>
+            </span>
+
+            <span th:if="${@userController.register}"> Already registered?
+                <a class="abutton-menu" href="/login/register">Login</a>
+            </span>
+        </span>
+    </div>
 </main>
 </body>
 </html>

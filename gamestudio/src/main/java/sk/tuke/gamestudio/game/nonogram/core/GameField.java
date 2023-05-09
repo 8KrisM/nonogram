@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class GameField {
+public class GameField{
 
     public class TilesFactory {
         public Tile[][] createEmptyTiles(String type) {
@@ -52,7 +52,8 @@ public class GameField {
     private int helpUses;
     private int[][] columnClues;
 
-    public GameField(int rows, int columns, Type type) {
+    public GameField(int rows, int columns, Type type) throws Exception {
+        if(rows<5||rows>99||columns<5||columns>99) throw new Exception("Invalid size");
         this.chances = 3;
         this.helpUses = 0;
         this.rows = rows;
@@ -68,6 +69,23 @@ public class GameField {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        columnClues=columnClue();
+        timeAtStart = LocalTime.now();
+    }
+
+    public GameField(int rows, int columns, Type type, Boolean creator) throws Exception {
+        if(rows<5||rows>99||columns<5||columns>99) throw new Exception("Invalid size");
+        this.chances = 3;
+        this.helpUses = 0;
+        this.rows = rows;
+        this.columns = columns;
+        TilesFactory factory = new TilesFactory();
+        this.tiles = factory.createEmptyTiles("tiles");
+
+        this.guessedTiles = factory.createEmptyTiles("guessed");
+        this.type = type;
+        state = State.PLAYING;
+        tiles = factory.createEmptyTiles("guessed");
         columnClues=columnClue();
         timeAtStart = LocalTime.now();
     }
@@ -325,5 +343,8 @@ public class GameField {
         else return columnClues;
     }
 
+    public void save() throws Exception{
+        Maps.save(rows, columns, guessedTiles);
+    }
 
 }
